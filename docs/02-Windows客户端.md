@@ -74,6 +74,8 @@
 
 视觉参考归档于 `docs/assets/site-manager-style-reference.png`，当前 WPF 实现预览归档于 `docs/assets/site-manager-wpf-preview-v1.png`。
 
+应用图标统一使用 `src/SiteManager.App/Assets/SiteManager.ico`：项目文件通过 `ApplicationIcon` 将它嵌入 Windows EXE，主窗口通过 `Icon` 属性显示同一资源，避免标题栏、任务栏和程序文件使用不同图标。
+
 - 背景 `#F5F5F0`，正文 `#1A1A1A`，卡片 `#FCFBF6`。
 - 主色珊瑚红 `#E85D4E`；辅色青柠 `#C4D94E`、天蓝 `#8BB4F7`、薰衣草紫 `#C5B5E0`、黄色 `#F2D160`。
 - 统一 2px 深色描边，卡片 24–32px 圆角，标签为胶囊形。

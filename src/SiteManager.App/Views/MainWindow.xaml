@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:SiteManager.App.ViewModels"
         xmlns:views="clr-namespace:SiteManager.App.Views"
-        Title="网页展台" Width="1180" Height="760" MinWidth="1024" MinHeight="640"
+        Title="网页展台" Icon="/SiteManager.App;component/Assets/SiteManager.ico" Width="1180" Height="760" MinWidth="1024" MinHeight="640"
         WindowStartupLocation="CenterScreen" Background="{StaticResource PaperBrush}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:LiveSitesViewModel}"><views:LiveSitesView /></DataTemplate>
