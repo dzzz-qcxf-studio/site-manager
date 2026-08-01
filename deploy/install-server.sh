@@ -6,7 +6,7 @@ readonly SERVICE_GROUP="sitepublisher"
 readonly SERVICE_ROOT="/srv/site-manager"
 readonly APPLICATION_ROOT="/opt/site-manager"
 readonly NGINX_SNIPPET="/etc/nginx/snippets/site-manager-location.conf"
-readonly PUBLIC_BASE_URL="http://47.86.89.203/s/"
+readonly PUBLIC_BASE_URL="${SITE_MANAGER_PUBLIC_BASE_URL:-http://47.86.89.203/s/}"
 
 DRY_RUN=true
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

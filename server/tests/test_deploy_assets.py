@@ -63,13 +63,23 @@ class DeploymentAssetTests(unittest.TestCase):
         self.assertIn("nginx -t", contents)
         self.assertNotIn("rm -rf", contents)
         self.assertNotIn("/var/www", contents)
-        self.assertIn("SITE_MANAGER_PUBLIC_BASE_URL", contents)
+        self.assertIn('PUBLIC_BASE_URL="${SITE_MANAGER_PUBLIC_BASE_URL:-', contents)
 
     def test_installer_copies_package_contents_for_repeatable_installation(self) -> None:
         contents = self.read("deploy/install-server.sh")
 
         self.assertIn('"$SOURCE_DIR/server/site_manager/."', contents)
         self.assertIn('"$APPLICATION_ROOT/site_manager"', contents)
+
+    def test_one_click_installer_bootstraps_dependencies_and_starts_isolated_web(self) -> None:
+        contents = self.read("deploy/one-click-install.sh")
+
+        self.assertIn("apt-get install -y git nginx python3 openssh-client", contents)
+        self.assertIn("git clone", contents)
+        self.assertIn("install-server.sh", contents)
+        self.assertIn("systemctl enable --now site-manager-web.service", contents)
+        self.assertIn("--public-key-file", contents)
+        self.assertNotIn("rm -rf", contents)
 
     def test_dry_run_does_not_query_an_account_it_only_plans_to_create(self) -> None:
         contents = self.read("deploy/install-server.sh")

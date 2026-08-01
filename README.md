@@ -64,6 +64,8 @@ flowchart LR
 - `docs/03-服务器发布服务.md`：目录、权限和清理策略
 - `docs/04-SSH发布协议.md`：客户端与服务端协议
 
+新服务器可以直接使用一键编排脚本：先把 Windows 的 `.pub` 公钥上传到服务器，再下载并执行 `deploy/one-click-install.sh`。脚本会自动安装依赖、拉取本仓库、安装服务并启动 80 端口网页服务；如果 80 端口已有服务，会停止并提示改用 Nginx snippet，不会覆盖现有网站。
+
 ### 2. 配置客户端
 
 复制 `config/settings.example.json` 到：
