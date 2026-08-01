@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">网页展台图标</title>
+  <desc id="desc">珊瑚红代码窗口中的网页代码符号</desc>
+  <rect width="256" height="256" rx="56" fill="#F5F5F0"/>
+  <rect x="28" y="28" width="200" height="200" rx="48" fill="#E85D4E" stroke="#1A1A1A" stroke-width="10"/>
+  <path d="M91 101 61 128l30 27M165 101l30 27-30 27M148 91l-40 74" fill="none" stroke="#FCFBF6" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="70" cy="67" r="7" fill="#F2D160"/>
+  <circle cx="94" cy="67" r="7" fill="#C4D94E"/>
+  <circle cx="118" cy="67" r="7" fill="#8BB4F7"/>
+</svg>

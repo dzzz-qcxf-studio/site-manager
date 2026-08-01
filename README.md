@@ -1,4 +1,10 @@
-# 网页展台 · Static Site Manager
+<p align="center">
+  <img src="docs/assets/site-manager-icon.svg" alt="网页展台 Logo" width="128" />
+</p>
+
+<h1 align="center">网页展台 · Static Site Manager</h1>
+
+<p align="center">把本地静态网页安全发布到自托管服务器，生成可直接分享的浏览器链接。</p>
 
 ![Windows](https://img.shields.io/badge/platform-Windows%2010%2B-2563eb?style=flat-square)
 ![.NET](https://img.shields.io/badge/.NET-8-512bd4?style=flat-square)
