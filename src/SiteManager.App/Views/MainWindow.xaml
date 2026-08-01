@@ -1,0 +1,116 @@
+<Window x:Class="SiteManager.App.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:SiteManager.App.ViewModels"
+        xmlns:views="clr-namespace:SiteManager.App.Views"
+        Title="网页展台" Width="1180" Height="760" MinWidth="1024" MinHeight="640"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource PaperBrush}">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:LiveSitesViewModel}"><views:LiveSitesView /></DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:PublishViewModel}"><views:PublishView /></DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TransferCenterViewModel}"><views:TransferCenterView /></DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TrashViewModel}"><views:TrashView /></DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}"><views:SettingsView /></DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="238" />
+            <ColumnDefinition Width="22" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="38" Height="38" Background="{StaticResource CoralBrush}" BorderBrush="{StaticResource InkBrush}" BorderThickness="2" CornerRadius="12">
+                            <TextBlock Text="&lt;/&gt;" FontWeight="Bold" Foreground="White" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="网页展台" FontFamily="{StaticResource UiFont}" FontSize="23" FontWeight="Bold" />
+                            <TextBlock Text="STATIC SITE MANAGER" FontSize="9" FontWeight="Bold" Foreground="{StaticResource MutedInkBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2">
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.LiveSites}">
+                        <TextBlock Text="已上架网站" />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                <Style.Triggers><DataTrigger Binding="{Binding IsLiveSitesSelected}" Value="True"><Setter Property="Background" Value="{StaticResource LimeBrush}" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Publish}">
+                        <TextBlock Text="上架网站" />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                <Style.Triggers><DataTrigger Binding="{Binding IsPublishSelected}" Value="True"><Setter Property="Background" Value="{StaticResource CoralBrush}" /><Setter Property="Foreground" Value="White" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Transfers}">
+                        <TextBlock Text="传输中心" />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                <Style.Triggers><DataTrigger Binding="{Binding IsTransfersSelected}" Value="True"><Setter Property="Background" Value="{StaticResource SkyBrush}" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Trash}">
+                        <TextBlock Text="回收站" />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                <Style.Triggers><DataTrigger Binding="{Binding IsTrashSelected}" Value="True"><Setter Property="Background" Value="{StaticResource LavenderBrush}" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Settings}">
+                        <TextBlock Text="设置" />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavButton}">
+                                <Style.Triggers><DataTrigger Binding="{Binding IsSettingsSelected}" Value="True"><Setter Property="Background" Value="{StaticResource YellowBrush}" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <Border Grid.Row="3" Padding="12" Background="#FFF1F0E8" CornerRadius="14">
+                    <StackPanel>
+                        <TextBlock Text="{Binding ServerStatusTitle}" FontSize="12" FontWeight="Bold" />
+                        <TextBlock Text="{Binding ServerStatusDescription}" Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource MutedInkBrush}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Border Width="86" Padding="8,4" HorizontalAlignment="Left" Background="{StaticResource SkyBrush}" BorderBrush="{StaticResource InkBrush}" BorderThickness="2" CornerRadius="14">
+                        <TextBlock Text="管理工作台" FontSize="11" FontWeight="Bold" TextAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="{Binding CurrentTitle}" Margin="0,10,0,0" Style="{StaticResource PageTitleText}" />
+                    <TextBlock Text="{Binding CurrentDescription}" Margin="0,6,0,0" Foreground="{StaticResource MutedInkBrush}" />
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Margin="0,23,0,0" Content="上架新网页" Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Publish}" />
+            </Grid>
+
+            <ContentControl Grid.Row="2" Content="{Binding CurrentPage}" />
+        </Grid>
+    </Grid>
+</Window>

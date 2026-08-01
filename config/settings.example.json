@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "host": "47.86.89.203",
+    "sshPort": 22,
+    "username": "sitepublisher",
+    "privateKeyPath": "C:\\Users\\YOUR_WINDOWS_USER\\.ssh\\site_manager_ed25519",
+    "hostKeySha256": "SHA256:ZrZ2SF13RvyeSsLMuHl27GIelk8Yb09f1PBBae/1tbU",
+    "publicBaseUrl": "http://47.86.89.203/s/",
+    "trashRetentionDays": 30
+  }
+}

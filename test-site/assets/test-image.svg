@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">展台测试图像</title>
+  <desc id="desc">珊瑚、青柠和天蓝色构成的几何测试图像</desc>
+  <rect width="960" height="540" fill="#c5b5e0"/>
+  <rect x="48" y="48" width="864" height="444" rx="28" fill="#fffdf7" stroke="#161817" stroke-width="8"/>
+  <circle cx="262" cy="270" r="126" fill="#e85d4e" stroke="#161817" stroke-width="8"/>
+  <path d="M442 390 L612 112 L818 390 Z" fill="#8bb4f7" stroke="#161817" stroke-width="8"/>
+  <rect x="500" y="196" width="216" height="148" rx="16" fill="#c4d94e" stroke="#161817" stroke-width="8"/>
+  <text x="82" y="110" font-family="monospace" font-weight="700" font-size="24" fill="#161817">LOCAL ASSET / SVG</text>
+  <text x="82" y="458" font-family="Georgia,serif" font-weight="700" font-size="42" fill="#161817">uploaded intact</text>
+</svg>

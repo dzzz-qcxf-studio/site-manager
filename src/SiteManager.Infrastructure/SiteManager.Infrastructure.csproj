@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SSH.NET" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <ProjectReference Include="..\SiteManager.Core\SiteManager.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,7 @@
+{
+  "project": "site-manager-upload-test",
+  "purpose": "验证 JSON 静态资源是否可读取",
+  "version": 1,
+  "checks": ["index.html", "svg", "mp4", "gltf", "json"],
+  "expectedBasePath": "/"
+}

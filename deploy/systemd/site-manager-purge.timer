@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Site Manager expired-trash cleanup daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=site-manager-purge.service
+
+[Install]
+WantedBy=timers.target

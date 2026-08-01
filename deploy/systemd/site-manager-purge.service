@@ -1,0 +1,13 @@
+[Unit]
+Description=Remove expired Site Manager trash entries
+After=network.target
+
+[Service]
+Type=oneshot
+User=sitepublisher
+Group=sitepublisher
+ExecStart=/usr/local/bin/site-managerctl purge-expired --request-id 00000000-0000-0000-0000-000000000001
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ReadWritePaths=/srv/site-manager

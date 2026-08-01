@@ -1,0 +1,17 @@
+[Unit]
+Description=Site Manager isolated static web server
+After=network.target
+ConditionPathExists=/etc/nginx/site-manager-nginx.conf
+
+[Service]
+Type=forking
+PIDFile=/run/site-manager-nginx.pid
+ExecStartPre=/usr/sbin/nginx -t -c /etc/nginx/site-manager-nginx.conf
+ExecStart=/usr/sbin/nginx -c /etc/nginx/site-manager-nginx.conf
+ExecReload=/usr/sbin/nginx -c /etc/nginx/site-manager-nginx.conf -s reload
+ExecStop=/usr/sbin/nginx -c /etc/nginx/site-manager-nginx.conf -s quit
+TimeoutStopSec=5
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

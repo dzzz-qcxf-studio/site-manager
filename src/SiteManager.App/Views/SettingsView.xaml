@@ -1,0 +1,17 @@
+<UserControl x:Class="SiteManager.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel>
+        <Border Style="{StaticResource CardBorder}" Padding="22"><Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="18" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <StackPanel><TextBlock Text="服务器地址" FontWeight="SemiBold" /><TextBox Margin="0,6,0,14" Style="{StaticResource FieldTextBox}" Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" /><TextBlock Text="SSH 端口" FontWeight="SemiBold" /><TextBox Margin="0,6,0,14" Style="{StaticResource FieldTextBox}" Text="{Binding SshPort, UpdateSourceTrigger=PropertyChanged}" /><TextBlock Text="登录用户" FontWeight="SemiBold" /><TextBox Margin="0,6,0,0" Style="{StaticResource FieldTextBox}" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" /></StackPanel>
+            <StackPanel Grid.Column="2"><TextBlock Text="私钥文件路径" FontWeight="SemiBold" /><TextBox Margin="0,6,0,14" Style="{StaticResource FieldTextBox}" Text="{Binding PrivateKeyPath, UpdateSourceTrigger=PropertyChanged}" /><TextBlock Text="主机 SHA-256 指纹" FontWeight="SemiBold" /><TextBox Margin="0,6,0,14" Style="{StaticResource FieldTextBox}" Text="{Binding HostKeySha256, UpdateSourceTrigger=PropertyChanged}" /><TextBlock Text="公开基础 URL" FontWeight="SemiBold" /><TextBox Margin="0,6,0,0" Style="{StaticResource FieldTextBox}" Text="{Binding PublicBaseUrl, UpdateSourceTrigger=PropertyChanged}" /></StackPanel>
+        </Grid></Border>
+        <Border Style="{StaticResource CardBorder}" Padding="22" Margin="0,14,0,0"><StackPanel>
+            <TextBlock Text="安全说明" FontSize="17" FontWeight="Bold" />
+            <TextBlock Text="软件只保存私钥路径，不读取或保存私钥文本、口令或 root 密码。测试连接只调用 status，不执行发布、删除或 Nginx 操作。" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{StaticResource MutedInkBrush}" />
+            <TextBlock Text="{Binding StatusMessage}" Margin="0,14,0,0" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Margin="0,18,0,0"><Button Style="{StaticResource OutlineButton}" Content="测试连接" Command="{Binding TestConnectionCommand}" /><Button Margin="12,0,0,0" Style="{StaticResource PrimaryButton}" Content="保存设置" Command="{Binding SaveCommand}" /></StackPanel>
+        </StackPanel></Border>
+    </StackPanel></ScrollViewer>
+</UserControl>

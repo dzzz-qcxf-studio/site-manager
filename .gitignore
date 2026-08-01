@@ -1,0 +1,39 @@
+# .NET / Visual Studio
+.vs/
+**/bin/
+**/obj/
+artifacts/
+编译完成版本/
+TestResults/
+*.user
+*.suo
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+appsettings.local.json
+secrets.json
+settings.json
+cache.db
+transfer-history.json
+site-folder-paths.json
+archives/
+*.pfx
+*.pem
+*.key
+id_ed25519*
+site_manager_ed25519*
+
+# Local tooling
+.idea/
+.vscode/
+*.swp
+*.tmp
+*.log
+__pycache__/
+*.py[cod]
+
+# OS metadata
+.DS_Store
+Thumbs.db
