@@ -104,11 +104,12 @@ public static class AppPageComposition
         var transferCenter = new TransferCenterViewModel();
         var unavailableRemote = new UnavailableRemotePublisher();
         var unavailableSync = new UnavailableSiteSyncService();
+        var catalog = new SiteCatalogState();
         return new AppPageModels(
-            new LiveSitesViewModel(unavailableSync, unavailableRemote, new WpfClipboardService(), new SystemBrowserService(), new DefaultSiteLinkService()),
+            new LiveSitesViewModel(unavailableSync, unavailableRemote, new WpfClipboardService(), new SystemBrowserService(), new DefaultSiteLinkService(), catalog),
             new PublishViewModel(new WebsiteFolderValidator(), new UnavailablePublishSiteService(), transferCenter, new DefaultArchivePathFactory()),
             transferCenter,
-            new TrashViewModel(unavailableSync, unavailableRemote, new WpfConfirmationService()),
+            new TrashViewModel(unavailableSync, unavailableRemote, new WpfConfirmationService(), catalog),
             settings,
             IsServerConfigured: false,
             ServerHost: null);
@@ -123,6 +124,7 @@ public static class AppPageComposition
         ITransferHistoryStore transferHistoryStore)
     {
         var transferCenter = new TransferCenterViewModel(transferHistoryStore);
+        var catalog = new SiteCatalogState();
         var siteSync = new SiteSyncService(remotePublisher, cache);
         var publish = new PublishSiteService(
             new WebsiteFolderValidator(),
@@ -131,10 +133,10 @@ public static class AppPageComposition
             cache,
             new ResumableUploadEngine());
         return new AppPageModels(
-            new LiveSitesViewModel(siteSync, remotePublisher, new WpfClipboardService(), new SystemBrowserService(), new DefaultSiteLinkService(profile.PublicBaseUrl)),
+            new LiveSitesViewModel(siteSync, remotePublisher, new WpfClipboardService(), new SystemBrowserService(), new DefaultSiteLinkService(profile.PublicBaseUrl), catalog),
             new PublishViewModel(new WebsiteFolderValidator(), publish, transferCenter, new DefaultArchivePathFactory(), folderPathStore),
             transferCenter,
-            new TrashViewModel(siteSync, remotePublisher, new WpfConfirmationService()),
+            new TrashViewModel(siteSync, remotePublisher, new WpfConfirmationService(), catalog),
             settings,
             IsServerConfigured: true,
             ServerHost: profile.Host);

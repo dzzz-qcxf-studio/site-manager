@@ -101,13 +101,10 @@
             <Grid>
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                 <StackPanel>
-                    <Border Width="86" Padding="8,4" HorizontalAlignment="Left" Background="{StaticResource SkyBrush}" BorderBrush="{StaticResource InkBrush}" BorderThickness="2" CornerRadius="14">
-                        <TextBlock Text="管理工作台" FontSize="11" FontWeight="Bold" TextAlignment="Center" />
-                    </Border>
-                    <TextBlock Text="{Binding CurrentTitle}" Margin="0,10,0,0" Style="{StaticResource PageTitleText}" />
+                    <TextBlock Text="{Binding CurrentTitle}" Style="{StaticResource PageTitleText}" />
                     <TextBlock Text="{Binding CurrentDescription}" Margin="0,6,0,0" Foreground="{StaticResource MutedInkBrush}" />
                 </StackPanel>
-                <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Margin="0,23,0,0" Content="上架新网页" Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Publish}" />
+                <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Margin="0,0,0,0" Content="上架新网页" Command="{Binding NavigateCommand}" CommandParameter="{x:Static viewModels:AppSection.Publish}" />
             </Grid>
 
             <ContentControl Grid.Row="2" Content="{Binding CurrentPage}" />

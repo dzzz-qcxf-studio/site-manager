@@ -14,6 +14,8 @@
 - 视觉令牌拆分在 `Resources/Colors.xaml`、`Typography.xaml` 和 `Controls.xaml`，界面不直接调用 SSH 或基础设施实现；字体资源同时保留 `UiFont` 与 `DisplayFont` 别名，兼容已有页面。
 - 已上架、上架、传输中心、回收站和设置页均已接入对应 ViewModel。`App.xaml.cs` 在启动时异步装配 SSH.NET、SFTP、SQLite 与设置存储，不在 WPF UI 线程上同步阻塞；没有已保存的配置时仍使用明确空态和错误提示，不会填充伪造站点数据。
 - 主窗口左下角的服务器状态卡片绑定实际启动配置：读取到设置文件时显示已配置的服务器地址，没有配置时才显示未配置提示。
+- 已上架网站和回收站共享 `SiteCatalogState`：同步、回收、恢复和永久删除完成后会用同一份站点快照刷新两个页面；远程操作通过异步互斥门串行执行，避免跨页面竞态和过期选中项误操作。
+- 页面顶部只保留当前页面标题和说明，不再显示蓝色“管理工作台”标签。
 - 当前运行预览归档于 `docs/assets/site-manager-wpf-preview-v1.png`。Core 已提供 `PublishSiteService` 和 `SiteSyncService`：发布会按校验、归档、远端准备、保存检查点、续传上传、验证、发布、缓存更新和删除检查点的顺序执行。
 - `scripts/publish-win-x64.ps1` 会先运行 Release 测试，再生成自包含单文件 Windows x64 程序、README、非敏感设置模板、ZIP 与 SHA-256 文件；产物目录 `artifacts/` 被 Git 忽略，不会提交私钥或本机设置。
 
@@ -59,6 +61,7 @@
 - 显示删除时间、预计清理时间和占用空间。
 - 支持恢复和立即永久删除。
 - 默认保留 30 天。
+- 回收站卡片通过 `ListBoxItem.HorizontalContentAlignment=Stretch` 撑满内容卡片宽度，项目多行时保持统一的父容器布局。
 
 当前实现支持同步、恢复及永久删除确认。永久删除必须先经 `IConfirmationService` 明确确认，取消确认时不调用远端清理。
 

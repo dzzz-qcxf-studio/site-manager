@@ -30,6 +30,35 @@ public sealed class TrashViewModelTests
     }
 
     [Fact]
+    public async Task Restore_updates_a_shared_live_sites_view()
+    {
+        var trashed = CreateSite(SiteStatus.Trash);
+        var restored = trashed with { Status = SiteStatus.Live, TrashedAt = null, PurgeAt = null };
+        var sync = new FakeSiteSyncService([trashed]);
+        var remote = new FakeRemotePublisher
+        {
+            OnRestore = _ =>
+            {
+                sync.Sites = [restored];
+                return restored;
+            }
+        };
+        var catalog = new SiteCatalogState();
+        var trashView = new TrashViewModel(sync, remote, new AlwaysConfirmService(), catalog)
+        {
+            SelectedTrashSite = trashed
+        };
+        var liveView = new LiveSitesViewModel(sync, remote, new RecordingClipboardService(),
+            new RecordingBrowserService(), new FixedLinkService("http://example.test/s"), catalog);
+        trashView.ReplaceSites([trashed]);
+
+        await trashView.RestoreCommand.ExecuteAsync(null);
+
+        Assert.Empty(trashView.TrashSites);
+        Assert.Equal([restored], liveView.Sites);
+    }
+
+    [Fact]
     public async Task Purge_command_requires_explicit_confirmation_service()
     {
         var trashed = CreateSite(SiteStatus.Trash);

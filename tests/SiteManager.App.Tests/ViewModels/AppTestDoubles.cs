@@ -56,6 +56,8 @@ internal sealed class FakeSiteSyncService(IReadOnlyList<SiteManifest>? sites = n
 
 internal sealed class FakeRemotePublisher : IRemotePublisher
 {
+    public Func<Guid, SiteManifest>? OnTrash { get; set; }
+
     public Func<Guid, SiteManifest>? OnRestore { get; set; }
 
     public List<Guid> PurgedSiteIds { get; } = [];
@@ -77,7 +79,8 @@ internal sealed class FakeRemotePublisher : IRemotePublisher
     public Task<IReadOnlyList<SiteManifest>> ListAsync(SiteStatus? status, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<SiteManifest>>([]);
 
-    public Task<SiteManifest> TrashAsync(Guid requestId, Guid siteId, CancellationToken cancellationToken) => throw new NotSupportedException();
+    public Task<SiteManifest> TrashAsync(Guid requestId, Guid siteId, CancellationToken cancellationToken) =>
+        Task.FromResult(OnTrash?.Invoke(siteId) ?? throw new NotSupportedException());
 
     public Task<SiteManifest> RestoreAsync(Guid requestId, Guid siteId, CancellationToken cancellationToken) =>
         Task.FromResult(OnRestore?.Invoke(siteId) ?? throw new NotSupportedException());

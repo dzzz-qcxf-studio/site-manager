@@ -13,6 +13,7 @@ public sealed class LiveSitesViewModel : ObservableObject
     private readonly IClipboardService _clipboardService;
     private readonly IBrowserService _browserService;
     private readonly ISiteLinkService _linkService;
+    private readonly SiteCatalogState? _catalog;
     private readonly ObservableCollection<SiteManifest> _sites = [];
     private string _searchText = string.Empty;
     private SiteManifest? _selectedSite;
@@ -24,13 +25,19 @@ public sealed class LiveSitesViewModel : ObservableObject
         IRemotePublisher remotePublisher,
         IClipboardService clipboardService,
         IBrowserService browserService,
-        ISiteLinkService linkService)
+        ISiteLinkService linkService,
+        SiteCatalogState? catalog = null)
     {
         _siteSyncService = siteSyncService ?? throw new ArgumentNullException(nameof(siteSyncService));
         _remotePublisher = remotePublisher ?? throw new ArgumentNullException(nameof(remotePublisher));
         _clipboardService = clipboardService ?? throw new ArgumentNullException(nameof(clipboardService));
         _browserService = browserService ?? throw new ArgumentNullException(nameof(browserService));
         _linkService = linkService ?? throw new ArgumentNullException(nameof(linkService));
+        _catalog = catalog;
+        if (_catalog is not null)
+        {
+            _catalog.Changed += ApplySites;
+        }
         RefreshCommand = new AsyncRelayCommand(RefreshAsync, () => !IsLoading);
         CopyLinkCommand = new AsyncRelayCommand(CopyLinkAsync, () => SelectedSite is not null);
         OpenLinkCommand = new AsyncRelayCommand(OpenLinkAsync, () => SelectedSite is not null);
@@ -117,6 +124,18 @@ public sealed class LiveSitesViewModel : ObservableObject
     public void ReplaceSites(IEnumerable<SiteManifest> sites)
     {
         ArgumentNullException.ThrowIfNull(sites);
+        if (_catalog is not null)
+        {
+            _catalog.ReplaceSites(sites);
+            return;
+        }
+
+        ApplySites(sites);
+    }
+
+    private void ApplySites(IEnumerable<SiteManifest> sites)
+    {
+        ArgumentNullException.ThrowIfNull(sites);
         _sites.Clear();
         foreach (var site in sites.Where(site => site.Status == SiteStatus.Live).OrderByDescending(site => site.UpdatedAt))
         {
@@ -137,8 +156,14 @@ public sealed class LiveSitesViewModel : ObservableObject
     {
         await ExecuteLoadingAsync(async cancellationToken =>
         {
-            var sites = await _siteSyncService.SyncAsync(cancellationToken);
-            ReplaceSites(sites);
+            if (_catalog is null)
+            {
+                ApplySites(await _siteSyncService.SyncAsync(cancellationToken));
+            }
+            else
+            {
+                await _catalog.SyncAndReplaceAsync(_siteSyncService, cancellationToken);
+            }
         });
     }
 
@@ -189,10 +214,30 @@ public sealed class LiveSitesViewModel : ObservableObject
         var selected = SelectedSite;
         await ExecuteLoadingAsync(async cancellationToken =>
         {
-            await _remotePublisher.TrashAsync(Guid.NewGuid(), selected.Id, cancellationToken);
-            var sites = await _siteSyncService.SyncAsync(cancellationToken);
-            ReplaceSites(sites);
+            async Task Mutate(CancellationToken token)
+            {
+                EnsureLiveSelection(selected.Id);
+                await _remotePublisher.TrashAsync(Guid.NewGuid(), selected.Id, token);
+            }
+
+            if (_catalog is null)
+            {
+                await Mutate(cancellationToken);
+                ApplySites(await _siteSyncService.SyncAsync(cancellationToken));
+            }
+            else
+            {
+                await _catalog.MutateAndSyncAsync(_siteSyncService, Mutate, cancellationToken);
+            }
         });
+    }
+
+    private void EnsureLiveSelection(Guid siteId)
+    {
+        if (_catalog is not null && _catalog.Sites.All(site => site.Id != siteId || site.Status != SiteStatus.Live))
+        {
+            throw new InvalidOperationException("网站状态已变化，请先同步已上架网站后再操作。");
+        }
     }
 
     private bool MatchesSearch(SiteManifest site)

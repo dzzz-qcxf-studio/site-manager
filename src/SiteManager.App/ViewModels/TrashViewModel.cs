@@ -11,6 +11,7 @@ public sealed class TrashViewModel : ObservableObject
     private readonly ISiteSyncService _siteSyncService;
     private readonly IRemotePublisher _remotePublisher;
     private readonly IConfirmationService _confirmationService;
+    private readonly SiteCatalogState? _catalog;
     private SiteManifest? _selectedTrashSite;
     private bool _isLoading;
     private string? _errorMessage;
@@ -18,11 +19,17 @@ public sealed class TrashViewModel : ObservableObject
     public TrashViewModel(
         ISiteSyncService siteSyncService,
         IRemotePublisher remotePublisher,
-        IConfirmationService confirmationService)
+        IConfirmationService confirmationService,
+        SiteCatalogState? catalog = null)
     {
         _siteSyncService = siteSyncService ?? throw new ArgumentNullException(nameof(siteSyncService));
         _remotePublisher = remotePublisher ?? throw new ArgumentNullException(nameof(remotePublisher));
         _confirmationService = confirmationService ?? throw new ArgumentNullException(nameof(confirmationService));
+        _catalog = catalog;
+        if (_catalog is not null)
+        {
+            _catalog.Changed += ApplySites;
+        }
         RefreshCommand = new AsyncRelayCommand(RefreshAsync, () => !IsLoading);
         RestoreCommand = new AsyncRelayCommand(RestoreAsync, () => SelectedTrashSite is not null && !IsLoading);
         PurgeCommand = new AsyncRelayCommand(PurgeAsync, () => SelectedTrashSite is not null && !IsLoading);
@@ -75,8 +82,14 @@ public sealed class TrashViewModel : ObservableObject
     {
         await ExecuteAsync(async cancellationToken =>
         {
-            var sites = await _siteSyncService.SyncAsync(cancellationToken);
-            ReplaceSites(sites);
+            if (_catalog is null)
+            {
+                ApplySites(await _siteSyncService.SyncAsync(cancellationToken));
+            }
+            else
+            {
+                await _catalog.SyncAndReplaceAsync(_siteSyncService, cancellationToken);
+            }
         });
     }
 
@@ -90,8 +103,21 @@ public sealed class TrashViewModel : ObservableObject
         var selected = SelectedTrashSite;
         await ExecuteAsync(async cancellationToken =>
         {
-            await _remotePublisher.RestoreAsync(Guid.NewGuid(), selected.Id, cancellationToken);
-            ReplaceSites(await _siteSyncService.SyncAsync(cancellationToken));
+            async Task Mutate(CancellationToken token)
+            {
+                EnsureTrashSelection(selected.Id);
+                await _remotePublisher.RestoreAsync(Guid.NewGuid(), selected.Id, token);
+            }
+
+            if (_catalog is null)
+            {
+                await Mutate(cancellationToken);
+                ApplySites(await _siteSyncService.SyncAsync(cancellationToken));
+            }
+            else
+            {
+                await _catalog.MutateAndSyncAsync(_siteSyncService, Mutate, cancellationToken);
+            }
         });
     }
 
@@ -114,12 +140,37 @@ public sealed class TrashViewModel : ObservableObject
 
         await ExecuteAsync(async cancellationToken =>
         {
-            await _remotePublisher.PurgeAsync(Guid.NewGuid(), selected.Id, cancellationToken);
-            ReplaceSites(await _siteSyncService.SyncAsync(cancellationToken));
+            async Task Mutate(CancellationToken token)
+            {
+                EnsureTrashSelection(selected.Id);
+                await _remotePublisher.PurgeAsync(Guid.NewGuid(), selected.Id, token);
+            }
+
+            if (_catalog is null)
+            {
+                await Mutate(cancellationToken);
+                ApplySites(await _siteSyncService.SyncAsync(cancellationToken));
+            }
+            else
+            {
+                await _catalog.MutateAndSyncAsync(_siteSyncService, Mutate, cancellationToken);
+            }
         });
     }
 
-    private void ReplaceSites(IEnumerable<SiteManifest> sites)
+    public void ReplaceSites(IEnumerable<SiteManifest> sites)
+    {
+        ArgumentNullException.ThrowIfNull(sites);
+        if (_catalog is not null)
+        {
+            _catalog.ReplaceSites(sites);
+            return;
+        }
+
+        ApplySites(sites);
+    }
+
+    private void ApplySites(IEnumerable<SiteManifest> sites)
     {
         LiveSites.Clear();
         TrashSites.Clear();
@@ -138,6 +189,14 @@ public sealed class TrashViewModel : ObservableObject
         if (SelectedTrashSite is not null && TrashSites.All(site => site.Id != SelectedTrashSite.Id))
         {
             SelectedTrashSite = null;
+        }
+    }
+
+    private void EnsureTrashSelection(Guid siteId)
+    {
+        if (_catalog is not null && _catalog.Sites.All(site => site.Id != siteId || site.Status != SiteStatus.Trash))
+        {
+            throw new InvalidOperationException("回收站项目状态已变化，请先同步回收站后再操作。");
         }
     }
 

@@ -75,6 +75,35 @@ public sealed class LiveSitesViewModelTests
     }
 
     [Fact]
+    public async Task Moving_site_to_trash_updates_the_shared_trash_view()
+    {
+        var live = CreateSite("live", "", "live-site");
+        var trashed = live with { Status = SiteStatus.Trash, TrashedAt = DateTimeOffset.UtcNow, PurgeAt = DateTimeOffset.UtcNow.AddDays(30) };
+        var sync = new FakeSiteSyncService([live]);
+        var remote = new FakeRemotePublisher
+        {
+            OnTrash = _ =>
+            {
+                sync.Sites = [trashed];
+                return trashed;
+            }
+        };
+        var catalog = new SiteCatalogState();
+        var liveView = new LiveSitesViewModel(sync, remote, new RecordingClipboardService(),
+            new RecordingBrowserService(), new FixedLinkService("http://example.test/s"), catalog)
+        {
+            SelectedSite = live
+        };
+        var trashView = new TrashViewModel(sync, remote, new AlwaysConfirmService(), catalog);
+        liveView.ReplaceSites([live]);
+
+        await liveView.MoveToTrashCommand.ExecuteAsync(null);
+
+        Assert.Empty(liveView.Sites);
+        Assert.Equal([trashed], trashView.TrashSites);
+    }
+
+    [Fact]
     public void Update_command_requests_the_selected_site()
     {
         var viewModel = CreateViewModel(new RecordingClipboardService());
