@@ -1,36 +1,8 @@
 <UserControl x:Class="SiteManager.App.Views.TrashView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <UserControl.Resources>
-        <Style x:Key="TrashListItemStyle" TargetType="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,0,0,8" />
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-            <Setter Property="RenderTransform">
-                <Setter.Value><TranslateTransform X="0" /></Setter.Value>
-            </Setter>
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{StaticResource SkyBrush}" />
-                    <Setter Property="BorderThickness" Value="3" />
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="5" Duration="0:0:0.16" AutoReverse="True" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
     <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="14" /><RowDefinition Height="*" /></Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal"><Button Style="{StaticResource OutlineButton}" Content="同步回收站" Command="{Binding RefreshCommand}" /><Button Margin="12,0,0,0" Style="{StaticResource OutlineButton}" Content="恢复" Command="{Binding RestoreCommand}" /><Button Margin="12,0,0,0" Content="永久删除" Command="{Binding PurgeCommand}"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}"><Setter Property="Background" Value="#D6D6D0" /><Setter Property="BorderBrush" Value="#9C9C96" /><Setter Property="Foreground" Value="{StaticResource MutedInkBrush}" /><Style.Triggers><Trigger Property="IsEnabled" Value="True"><Setter Property="Background" Value="{StaticResource CoralBrush}" /><Setter Property="BorderBrush" Value="{StaticResource InkBrush}" /><Setter Property="Foreground" Value="White" /></Trigger></Style.Triggers></Style></Button.Style></Button></StackPanel>
-        <Border Grid.Row="2" Style="{StaticResource CardBorder}" Padding="18"><Grid><ListBox ItemsSource="{Binding TrashSites}" SelectedItem="{Binding SelectedTrashSite}" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource TrashListItemStyle}"><ListBox.ItemTemplate><DataTemplate><Border HorizontalAlignment="Stretch" Padding="12" Background="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=Background}" BorderBrush="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=BorderBrush}" BorderThickness="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=BorderThickness}" CornerRadius="14"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" /><TextBlock Text="{Binding Note}" Margin="0,4,0,0" Foreground="{StaticResource MutedInkBrush}" /></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="将在以下时间清理" FontSize="11" Foreground="{StaticResource MutedInkBrush}" /><TextBlock Text="{Binding PurgeAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontWeight="Bold" /></StackPanel></Grid></Border></DataTemplate></ListBox.ItemTemplate></ListBox><TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource CoralBrush}" VerticalAlignment="Bottom" TextWrapping="Wrap" /></Grid></Border>
+        <Border Grid.Row="2" Style="{StaticResource CardBorder}" Padding="18"><Grid><ListBox ItemsSource="{Binding TrashSites}" SelectedItem="{Binding SelectedTrashSite}" BorderThickness="0" Background="Transparent" ItemContainerStyle="{StaticResource SiteListItemStyle}"><ListBox.ItemTemplate><DataTemplate><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" /><TextBlock Text="{Binding Note}" Margin="0,4,0,0" Foreground="{StaticResource MutedInkBrush}" /></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="将在以下时间清理" FontSize="11" Foreground="{StaticResource MutedInkBrush}" /><TextBlock Text="{Binding PurgeAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontWeight="Bold" /></StackPanel></Grid></DataTemplate></ListBox.ItemTemplate></ListBox><TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource CoralBrush}" VerticalAlignment="Bottom" TextWrapping="Wrap" /></Grid></Border>
     </Grid>
 </UserControl>

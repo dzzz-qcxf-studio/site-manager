@@ -102,6 +102,44 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SiteListItemStyle" TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Background" Value="{StaticResource CardBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="item"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="14">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="item" Property="Background" Value="{StaticResource LimeBrush}" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="item"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         From="0.82" To="1"
+                                                         Duration="0:0:0.16" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="FieldTextBox" TargetType="TextBox">
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="FontFamily" Value="{StaticResource UiFont}" />
