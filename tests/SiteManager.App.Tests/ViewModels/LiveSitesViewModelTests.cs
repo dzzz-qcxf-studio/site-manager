@@ -36,6 +36,20 @@ public sealed class LiveSitesViewModelTests
     }
 
     [Fact]
+    public async Task Open_link_uses_selected_site_url()
+    {
+        var browser = new RecordingBrowserService();
+        var viewModel = CreateViewModel(new RecordingClipboardService(), browser);
+        var site = CreateSite("产品模型", "客户 A", "alpha-one");
+        viewModel.ReplaceSites([site]);
+        viewModel.SelectedSite = site;
+
+        await viewModel.OpenLinkCommand.ExecuteAsync(null);
+
+        Assert.Equal(new Uri("http://example.test/s/alpha-one/"), browser.LastAddress);
+    }
+
+    [Fact]
     public async Task Copy_link_surfaces_clipboard_failure_without_throwing()
     {
         var viewModel = CreateViewModel(new ThrowingClipboardService());
@@ -118,9 +132,9 @@ public sealed class LiveSitesViewModelTests
         Assert.Equal(site, requested);
     }
 
-    private static LiveSitesViewModel CreateViewModel(IClipboardService clipboard) =>
+    private static LiveSitesViewModel CreateViewModel(IClipboardService clipboard, IBrowserService? browser = null) =>
         new(new FakeSiteSyncService(), new FakeRemotePublisher(), clipboard,
-            new RecordingBrowserService(), new FixedLinkService("http://example.test/s"));
+            browser ?? new RecordingBrowserService(), new FixedLinkService("http://example.test/s"));
 
     private static SiteManifest CreateSite(string name, string note, string slug)
     {

@@ -4,12 +4,13 @@
     <Grid>
         <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="14" /><RowDefinition Height="*" /></Grid.RowDefinitions>
         <Grid>
-            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="12" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" Style="{StaticResource FieldTextBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="搜索名称、备注或链接" />
             <Button Grid.Column="2" Style="{StaticResource OutlineButton}" Content="同步" Command="{Binding RefreshCommand}" />
             <Button Grid.Column="4" Style="{StaticResource OutlineButton}" Content="复制链接" Command="{Binding CopyLinkCommand}" />
-            <Button Grid.Column="6" Style="{StaticResource OutlineButton}" Content="更新" Command="{Binding UpdateCommand}" />
-            <Button Grid.Column="8" Style="{StaticResource OutlineButton}" Content="移入回收站" Command="{Binding MoveToTrashCommand}" />
+            <Button Grid.Column="6" Style="{StaticResource OutlineButton}" Content="打开" Command="{Binding OpenLinkCommand}" />
+            <Button Grid.Column="8" Style="{StaticResource OutlineButton}" Content="更新" Command="{Binding UpdateCommand}" />
+            <Button Grid.Column="10" Style="{StaticResource OutlineButton}" Content="移入回收站" Command="{Binding MoveToTrashCommand}" />
         </Grid>
         <Border Grid.Row="2" Style="{StaticResource CardBorder}" Padding="18">
             <Grid>

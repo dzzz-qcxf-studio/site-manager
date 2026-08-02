@@ -169,7 +169,13 @@ internal sealed class PostWriteClipboardBackend(string text) : IClipboardBackend
 
 internal sealed class RecordingBrowserService : IBrowserService
 {
-    public Task OpenAsync(Uri address, CancellationToken cancellationToken) => Task.CompletedTask;
+    public Uri? LastAddress { get; private set; }
+
+    public Task OpenAsync(Uri address, CancellationToken cancellationToken)
+    {
+        LastAddress = address;
+        return Task.CompletedTask;
+    }
 }
 
 internal sealed class FixedLinkService(string baseUrl) : ISiteLinkService
