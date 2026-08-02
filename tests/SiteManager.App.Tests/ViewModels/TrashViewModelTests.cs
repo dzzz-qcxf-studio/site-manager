@@ -73,6 +73,20 @@ public sealed class TrashViewModelTests
         Assert.Empty(remote.PurgedSiteIds);
     }
 
+    [Fact]
+    public void Purge_command_is_disabled_without_a_selected_site()
+    {
+        var viewModel = new TrashViewModel(new FakeSiteSyncService(), new FakeRemotePublisher(), new AlwaysConfirmService());
+
+        Assert.False(viewModel.PurgeCommand.CanExecute(null));
+
+        viewModel.SelectedTrashSite = CreateSite(SiteStatus.Trash);
+        Assert.True(viewModel.PurgeCommand.CanExecute(null));
+
+        viewModel.SelectedTrashSite = null;
+        Assert.False(viewModel.PurgeCommand.CanExecute(null));
+    }
+
     private static SiteManifest CreateSite(SiteStatus status)
     {
         var now = DateTimeOffset.UtcNow;
