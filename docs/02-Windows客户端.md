@@ -9,6 +9,7 @@
 ## 当前实现状态
 
 - `SiteManager.App` 已建立 .NET 8 WPF 应用壳，默认窗口为 1180×760，最小尺寸为 1024×640。
+- `SiteManager.App.exe` 同时支持图形界面和命令行模式：不带参数时启动 WPF，带 `status`、`list`、`publish` 等命令时执行一次 CLI 任务并退出；两种入口共用 Core、SSH/SFTP、配置和缓存。
 - 默认进入“已上架网站”，左侧导航可切换已上架、上架网站、传输中心、回收站和设置；导航状态由 `ShellViewModel` 管理并有自动化测试。
 - 首屏当前显示“尚未连接服务器”和空站点状态，数量与空间使用 `—`，不得将预览数据误认为服务器事实。
 - 视觉令牌拆分在 `Resources/Colors.xaml`、`Typography.xaml` 和 `Controls.xaml`，界面不直接调用 SSH 或基础设施实现；字体资源同时保留 `UiFont` 与 `DisplayFont` 别名，兼容已有页面。
@@ -30,6 +31,10 @@
 - 当前实现支持同步、搜索、复制链接、在浏览器打开、移入回收站和更新；选择“更新”会将既有站点 ID 带到上架页，后续发布保留原 `slug`。
 - 复制链接遇到 Windows 剪贴板暂时被占用时会自动短暂重试；最终失败会显示错误提示，不会让异步命令导致程序退出。
 - 已配置服务器时，启动会先读取 `%APPDATA%/SiteManager/cache.db` 中上次成功同步的站点并立即显示；窗口显示后自动执行一次后台同步，成功后用服务器清单替换并持久化缓存。
+
+### 命令行模式
+
+命令行模式复用桌面端同一个 `SiteManager.App.exe`，适合脚本和 AI 调用。常用命令包括 `status`、`sync`、`list`、`publish`、`update`、`open`、`trash`、`restore` 和 `purge`。自动化调用应始终添加 `--json`，此时 stdout 只输出一个 JSON 文档，进度写入 stderr；`purge` 必须显式带 `--yes`。详细命令约定见 [CLI 模式设计](plans/2026-08-02-cli-mode-design.md) 和仓库内 `skills/site-manager-cli`。
 
 ### 上架网站
 

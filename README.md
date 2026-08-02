@@ -91,6 +91,17 @@ dotnet run --project src/SiteManager.App/SiteManager.App.csproj
 
 发布脚本会先运行测试，再生成 `artifacts/` 下的 EXE、ZIP 和 SHA-256 校验文件。构建产物被 `.gitignore` 排除，不会进入公共仓库。
 
+同一个 EXE 也支持命令行模式：不带参数启动桌面界面，带命令参数时执行一次操作并退出。自动化和 AI 调用建议使用 `--json`：
+
+```powershell
+$exe = "C:\path\to\SiteManager.App.exe"
+& $exe list --status live --json
+& $exe open --site <id-or-slug> --json
+& $exe publish --source "C:\path\to\site" --name "展示名称" --json
+```
+
+支持 `status`、`sync`、`list`、`publish`、`update`、`open`、`trash`、`restore` 和 `purge`。永久删除必须显式使用 `purge --yes`。AI 操作说明位于 [`skills/site-manager-cli`](skills/site-manager-cli)。
+
 ## 安全边界
 
 - 仓库不包含私钥正文、密码、令牌、本机 `settings.json`、SQLite 缓存、传输历史或构建产物。
@@ -109,6 +120,7 @@ dotnet run --project src/SiteManager.App/SiteManager.App.csproj
 src/SiteManager.Core             领域模型、校验、发布编排、协议
 src/SiteManager.Infrastructure   SSH/SFTP、归档、SQLite、JSON 存储
 src/SiteManager.App              WPF 视图、资源和 ViewModel
+skills/site-manager-cli          AI 使用同一个 EXE 管理网站的操作规范
 server/                           Linux 发布服务与清理生命周期
 tests/                            .NET、基础设施和服务端测试
 docs/                             架构、协议、部署和设计文档

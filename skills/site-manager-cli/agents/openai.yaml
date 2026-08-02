@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Manager CLI"
+  short_description: "通过同一个网页展台 EXE 安全管理已上架网站"
+  default_prompt: "使用 $site-manager-cli 通过网页展台 CLI 安全地管理网站。"

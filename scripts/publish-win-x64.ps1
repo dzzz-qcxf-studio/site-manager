@@ -28,6 +28,7 @@ $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repositoryRoot "src\SiteManager.App\SiteManager.App.csproj"
 $readmePath = Join-Path $repositoryRoot "README.md"
 $settingsTemplatePath = Join-Path $repositoryRoot "config\settings.example.json"
+$skillSourcePath = Join-Path $repositoryRoot "skills\site-manager-cli"
 $artifactsRoot = Join-Path $repositoryRoot "artifacts"
 $publishDirectory = Join-Path $artifactsRoot "SiteManager-win-x64"
 $zipPath = Join-Path $artifactsRoot "SiteManager-win-x64.zip"
@@ -40,6 +41,10 @@ if ($LASTEXITCODE -ne 0) {
 
 if (-not (Test-Path -LiteralPath $readmePath -PathType Leaf) -or -not (Test-Path -LiteralPath $settingsTemplatePath -PathType Leaf)) {
     throw "Package documentation or settings template is missing."
+}
+
+if (-not (Test-Path -LiteralPath $skillSourcePath -PathType Container)) {
+    throw "CLI skill is missing: $skillSourcePath"
 }
 
 Remove-PreviousPackage -Path $publishDirectory -ArtifactsRoot $artifactsRoot
@@ -59,6 +64,8 @@ if (-not (Test-Path -LiteralPath $applicationPath -PathType Leaf)) {
 
 Copy-Item -LiteralPath $readmePath -Destination (Join-Path $publishDirectory "README.md")
 Copy-Item -LiteralPath $settingsTemplatePath -Destination (Join-Path $publishDirectory "settings.example.json")
+New-Item -ItemType Directory -Path (Join-Path $publishDirectory "skills") -Force | Out-Null
+Copy-Item -LiteralPath $skillSourcePath -Destination (Join-Path $publishDirectory "skills\site-manager-cli") -Recurse
 Compress-Archive -Path (Join-Path $publishDirectory "*") -DestinationPath $zipPath -CompressionLevel Optimal
 if (-not (Test-Path -LiteralPath $zipPath -PathType Leaf)) {
     throw "ZIP package was not created."

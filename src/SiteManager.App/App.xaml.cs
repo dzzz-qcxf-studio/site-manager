@@ -1,4 +1,5 @@
 using System.Windows;
+using SiteManager.App.CommandLine;
 using SiteManager.App.ViewModels;
 using SiteManager.App.Views;
 using SiteManager.Core.Configuration;
@@ -11,7 +12,24 @@ public partial class App : Application
 {
     protected override async void OnStartup(StartupEventArgs eventArgs)
     {
+        if (eventArgs.Args.Length == 0)
+        {
+            CliConsole.DetachForGui();
+        }
+
         base.OnStartup(eventArgs);
+        if (eventArgs.Args.Length > 0)
+        {
+            CliConsole.AttachToParent();
+            var exitCode = await new CliRunner().RunAsync(
+                eventArgs.Args,
+                Console.Out,
+                Console.Error,
+                CancellationToken.None);
+            Shutdown(exitCode);
+            return;
+        }
+
         IServerProfileStore settingsStore = new JsonSettingsStore(JsonSettingsStore.GetDefaultPath());
         ServerProfile? profile;
         try
